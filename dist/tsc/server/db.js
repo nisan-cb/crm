@@ -49,8 +49,22 @@ class DB {
                 service_code INTEGER REFERENCES services(code)
             );`);
     }
+    // insert new service
+    async insertNewService(description) {
+        await this.client.query('INSERT INTO services (description) VALUES ($1)', [description]);
+    }
+    // insert new client
+    async insertNewClient(id, name, phoneNumber) {
+        await this.client.query('INSERT INTO clients (id, name, phone_number) VALUES ($1, $2, $3)', [id, name, phoneNumber]);
+    }
+    // insert new branch
+    async insertNewBranch(city) {
+        await this.client.query('INSERT INTO branches (city) VALUES ($1)', [city]);
+    }
+    // insert new record
+    async insertNewRecord(branch_code, service_code, client_id) {
+        await this.client.query('INSERT INTO records (branch_code, client_id, service_code) VALUES ($1,$2,$3)', [branch_code, client_id, service_code]);
+    }
 }
 exports.default = DB;
-// FOREIGN KEY(location_id)
-// REFERENCES locations(location_id), 
 //# sourceMappingURL=db.js.map

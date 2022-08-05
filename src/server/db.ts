@@ -62,7 +62,36 @@ export default class DB {
             );`
         );
     }
-}
 
-// FOREIGN KEY(location_id)
-// REFERENCES locations(location_id), 
+    // insert new service
+    async insertNewService(description: string) {
+        await this.client.query(
+            'INSERT INTO services (description) VALUES ($1)',
+            [description]
+        );
+    }
+
+    // insert new client
+    async insertNewClient(id: number, name: string, phoneNumber: string) {
+        await this.client.query(
+            'INSERT INTO clients (id, name, phone_number) VALUES ($1, $2, $3)',
+            [id, name, phoneNumber]
+        );
+    }
+
+    // insert new branch
+    async insertNewBranch(city: string) {
+        await this.client.query(
+            'INSERT INTO branches (city) VALUES ($1)',
+            [city]
+        );
+    }
+
+    // insert new record
+    async insertNewRecord(branch_code: number, service_code: number, client_id: number) {
+        await this.client.query(
+            'INSERT INTO records (branch_code, client_id, service_code) VALUES ($1,$2,$3)',
+            [branch_code, client_id, service_code]
+        );
+    }
+}

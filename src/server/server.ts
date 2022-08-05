@@ -8,9 +8,9 @@ const db = new DB();
 db.connect()
   .then(() => {
     console.log("connected to DB");
-    db.createRecordTable()
-      .then(() => console.log("record table created"))
-      .catch(err => console.log("error in create record table", err))
+    db.insertNewRecord(2, 5, 444)
+      .then(() => console.log("inserted"))
+      .catch(err => console.log("error ***", err))
   })
   .catch((err) => console.log("DB connection failed"))
 
