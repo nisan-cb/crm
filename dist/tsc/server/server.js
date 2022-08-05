@@ -7,6 +7,16 @@ const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = require("body-parser");
+const db_1 = __importDefault(require("./db"));
+const db = new db_1.default();
+db.connect()
+    .then(() => {
+    console.log("connected to DB");
+    db.createRecordTable()
+        .then(() => console.log("record table created"))
+        .catch(err => console.log("error in create record table", err));
+})
+    .catch((err) => console.log("DB connection failed"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use((0, body_parser_1.json)());

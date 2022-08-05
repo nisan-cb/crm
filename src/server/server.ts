@@ -2,6 +2,20 @@ import path from 'path';
 import express, { Express } from 'express';
 import cors from 'cors';
 import { json } from 'body-parser';
+import DB from './db';
+
+const db = new DB();
+db.connect()
+  .then(() => {
+    console.log("connected to DB");
+    db.createRecordTable()
+      .then(() => console.log("record table created"))
+      .catch(err => console.log("error in create record table", err))
+  })
+  .catch((err) => console.log("DB connection failed"))
+
+
+
 
 const app: Express = express();
 app.use(cors());
