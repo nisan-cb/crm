@@ -4,31 +4,40 @@ import cors from 'cors';
 import { json } from 'body-parser';
 import DB from './db';
 
+
+const app: Express = express();
 const db = new DB();
+const port = process.env.PORT || 4000;
+
+
+// Create data base connection
 db.connect()
-  .then(() => {
+  .then(async () => {
     console.log("connected to DB");
-    db.insertNewRecord(2, 5, 444)
-      .then(() => console.log("inserted"))
-      .catch(err => console.log("error ***", err))
+    const records = await db.getAllRecords()
+    console.log(records)
   })
   .catch((err) => console.log("DB connection failed"))
 
 
 
-
-const app: Express = express();
-app.use(cors());
+// app.use(cors());
 app.use(json());
 const root: string = path.join(process.cwd(), 'dist');
 
 app.use(express.static(root));
 
+app.get('/api/records', async (req, res) => {
+  const allRecords = await db.getAllRecords();
+  res.send(allRecords)
+})
+
 app.get('*', (_req, res) => {
   res.sendFile(path.join(root, 'index.html'));
 });
 
-const port = process.env.PORT || 4000;
+
+
 app.listen(port, () => {
   console.log('Hosted: http://localhost:' + port);
 });

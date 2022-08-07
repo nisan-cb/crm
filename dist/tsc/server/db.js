@@ -65,6 +65,21 @@ class DB {
     async insertNewRecord(branch_code, service_code, client_id) {
         await this.client.query('INSERT INTO records (branch_code, client_id, service_code) VALUES ($1,$2,$3)', [branch_code, client_id, service_code]);
     }
+    // return all records from DB
+    async getAllRecords() {
+        const result = await this.client.query('SELECT number, branches.city, clients.name, clients.phone_number, services.description\
+             FROM records \
+             INNER JOIN branches ON \
+             branches.code = records.branch_code \
+             INNER JOIN clients ON \
+             clients.id = records.client_id \
+             INNER JOIN services ON \
+             services.code = records.service_code \
+             ');
+        // .catch(err => console.log(err))
+        // console.log(result.rows)
+        return result.rows;
+    }
 }
 exports.default = DB;
 //# sourceMappingURL=db.js.map
