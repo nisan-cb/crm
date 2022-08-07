@@ -14,7 +14,7 @@ app.use(cors())
 db.connect()
   .then(async () => {
     console.log("connected to DB");
-    const records = await db.getAllRecords()
+    const records = await db.getAllServices()
     console.log(records)
   })
   .catch((err) => console.log("DB connection failed"))
@@ -30,6 +30,11 @@ app.use(express.static(root));
 app.get('/api/records', async (req, res) => {
   const allRecords = await db.getAllRecords();
   res.send(allRecords)
+});
+
+app.get('/api/services', async (req, res) => {
+  const allServices = await db.getAllServices();
+  res.send(allServices)
 })
 
 app.get('*', (_req, res) => {

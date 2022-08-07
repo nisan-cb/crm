@@ -80,7 +80,7 @@ gulp.task('build', gulp.series(
   'clean',
   'scss',
   'index',
-  'icon',
+  // 'icon',
   'tsc',
   'bundle',
 ));

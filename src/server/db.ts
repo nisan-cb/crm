@@ -113,5 +113,14 @@ export default class DB {
         return result.rows
     }
 
+    // return all services types from DB
+    async getAllServices() {
+        const result = await this.client.query(
+            'SELECT * FROM services'
+        )
+        // .catch(err => console.log(err))
+        // console.log(result.rows)
+        return result.rows
+    }
 
 }
