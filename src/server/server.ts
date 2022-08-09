@@ -34,6 +34,7 @@ app.get('/api/records', async (req, res) => {
 
 app.get('/api/services', async (req, res) => {
   const allServices = await db.getAllServices();
+  // res.json({ data: allServices })
   res.send(allServices)
 })
 

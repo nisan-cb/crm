@@ -8,7 +8,7 @@ export default class DB {
 
     constructor() {
         this.client = new Client({
-            connectionString: process.env.PS_URL,
+            connectionString: process.env.DATABASE_URL,
             ssl: {
                 rejectUnauthorized: false
             }
