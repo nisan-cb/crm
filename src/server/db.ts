@@ -13,10 +13,19 @@ export default class DB {
                 rejectUnauthorized: false
             }
         })
+
     }
 
 
+    async createTables() {
+        await this.createBranchesTable();
+        await this.createClientsTable();
+        await this.createServicesTable();
+        await this.createRecordTable();
+    }
+
     async connect() {
+        console.log('conecting...')
         await this.client.connect();
     }
 
@@ -73,6 +82,7 @@ export default class DB {
 
     // insert new client
     async insertNewClient(id: number, name: string, phoneNumber: string) {
+        console.log(name);
         await this.client.query(
             'INSERT INTO clients (id, name, phone_number) VALUES ($1, $2, $3)',
             [id, name, phoneNumber]
@@ -117,10 +127,21 @@ export default class DB {
     async getAllServices() {
         const result = await this.client.query(
             'SELECT * FROM services'
-        )
-        // .catch(err => console.log(err))
-        // console.log(result.rows)
+        );
         return result.rows
     }
 
+    // return branches list from DB
+    async getAllBranches() {
+        const result = await this.client.query(
+            'SELECT * FROM branches'
+        );
+        return result.rows
+    }
+
+    // get client info by id
+    async getClientById(id: number) {
+        const result = await this.client.query(`SELECT * FROM clients WHERE id = $1 `, [id]);
+        return result;
+    }
 }

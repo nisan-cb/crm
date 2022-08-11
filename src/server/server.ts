@@ -9,19 +9,16 @@ const app: Express = express();
 const db = new DB();
 const port = process.env.PORT || 4000;
 
-app.use(cors())
 // Create data base connection
 db.connect()
   .then(async () => {
     console.log("connected to DB");
-    const records = await db.getAllServices()
-    console.log(records)
   })
-  .catch((err) => console.log("DB connection failed"))
+  .catch((err) => console.log("DB connection failed", err))
 
 
 
-// app.use(cors());
+app.use(cors());
 app.use(json());
 const root: string = path.join(process.cwd(), 'dist');
 
@@ -34,8 +31,39 @@ app.get('/api/records', async (req, res) => {
 
 app.get('/api/services', async (req, res) => {
   const allServices = await db.getAllServices();
-  // res.json({ data: allServices })
   res.send(allServices)
+});
+
+app.get('/api/branches', async (req, res) => {
+  const branchesList = await db.getAllBranches();
+  res.send(branchesList)
+});
+
+app.post('/api/insertNewRecord', async (req, res) => {
+  console.log(req.body)
+  // let service, branch, client_id, client_nmae, phone_number;
+  const { service, branch, client_id, client_name, phone_number } = req.body
+  console.log(req.body)
+  try {
+    // check if client exist in the system
+    const client = await db.getClientById(client_id);
+    console.log(client.rowCount);
+
+    // if new client, add him to the system
+    if (client.rowCount === 0) // new client
+      await db.insertNewClient(client_id, client_name, phone_number)
+
+    // finaly add new record
+    await db.insertNewRecord(branch, service, client_id,);
+    res.json({ msg: 'new record inserted' });
+  } catch (error) {
+    console.log(error);
+  }
+
+
+
+
+
 })
 
 app.get('*', (_req, res) => {
