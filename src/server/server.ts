@@ -29,19 +29,13 @@ app.use("*", (req, res, next) => {
 });
 
 app.use(express.static(root));
-// app.use(express.static(path.join(root,)));
-
-// app.use(express.static(path.join(root, '/client')));
 
 
 
-
-
-
+// endpoint to get all records
 app.get('/api/records', async (req, res) => {
   console.log("request for records");
   const allRecords = await db.getAllRecords();
-  // console.log(allRecords)
   res.send(allRecords)
 });
 
@@ -60,12 +54,8 @@ app.get('/api/branches', async (req, res) => {
 // endpoint to get all status options
 app.get('/api/status-options', async (req, res) => {
   const list = await db.getStatusOptions();
-  // console.log(list.rows[0].enum_range);
   let obj = list.rows[0].enum_range;
-  // console.log(typeof obj)
-  // console.log(obj)
   obj = obj.replace('{', '').replace('}', '').replace('"', '').replace('"', '')
-  // console.log(obj.split(','))
   obj = obj.split(',');
   res.json(obj);
 })
