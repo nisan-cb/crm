@@ -72,7 +72,7 @@ app.put('/api/update-record-status/:recordNumber/:newstatus', async (req, res) =
 
 // endpoint to insert new record
 app.post('/api/insertNewRecord', async (req, res) => {
-  // console.log(req.body)
+  console.log(req.body)
   // let service, branch, client_id, client_nmae, phone_number;
   const { service, branch, client_id, client_name, phone_number } = req.body
   // console.log(req.body)

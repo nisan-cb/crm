@@ -1,6 +1,8 @@
 # crm
 
-https://ncb-crm.herokuapp.com/
+deployment : https://ncb-crm.herokuapp.com/
+
+react repo : https://github.com/nisan-cb/crm-client
 
 system to manage client appointments to services
 
