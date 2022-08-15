@@ -108,7 +108,7 @@ export default class DB {
     // return all records from DB
     async getAllRecords() {
         const result = await this.client.query(
-            'SELECT number, branches.city, clients.name, clients.phone_number, services.description\
+            'SELECT number, branches.city, clients.name, clients.phone_number,status, services.description\
              FROM records \
              INNER JOIN branches ON \
              branches.code = records.branch_code \
@@ -116,6 +116,7 @@ export default class DB {
              clients.id = records.client_id \
              INNER JOIN services ON \
              services.code = records.service_code \
+             ORDER BY number\
              '
         )
         // .catch(err => console.log(err))
@@ -144,4 +145,25 @@ export default class DB {
         const result = await this.client.query(`SELECT * FROM clients WHERE id = $1 `, [id]);
         return result;
     }
+
+    // get all status options
+    async getStatusOptions() {
+        const result = await this.client.query('select enum_range(null::status)');
+        return result;
+    }
+
+    // update recorde status
+    async updateRecordStatus(newStatus: string, recordNumber: number) {
+        try {
+            const result = await this.client.query(`update records set status = $1 where number = $2;`,
+                [newStatus, recordNumber]);
+            console.log(result)
+            return true
+        }
+        catch (err) {
+            console.log(err);
+            return false;
+        }
+    }
+
 }

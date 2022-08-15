@@ -32,6 +32,12 @@ gulp.task('index', () => {
     .pipe(gulp.dest('./dist'));
 });
 
+// Transfers react
+gulp.task('react', () => {
+  return gulp.src(['./src/client/**/*'])
+    .pipe(gulp.dest('./dist'));
+});
+
 // Transfers index
 gulp.task('icon', () => {
   return gulp.src(['./src/client/favicon.ico'])
@@ -83,6 +89,7 @@ gulp.task('build', gulp.series(
   // 'icon',
   'tsc',
   'bundle',
+  'react'
 ));
 
 // Heroku copy dist files
@@ -93,7 +100,8 @@ gulp.task('heroku-copy-dist', () => {
     // './dist/favicon.ico',
     './dist/index.html',
     // './dist/styles.css',
-  ])
+    './dist/**/*'
+  ], { "allowEmpty": true })
     .pipe(gulp.dest('./deploy/dist'));
 });
 
@@ -105,6 +113,7 @@ gulp.task('heroku-copy-root', () => {
     './Procfile',
     './dist/tsc/server/server.js',
     './dist/tsc/server/db.js',
+    './dist/index.html'
   ])
     .pipe(gulp.dest('./deploy'));
 });

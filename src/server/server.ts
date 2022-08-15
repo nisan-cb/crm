@@ -22,28 +22,70 @@ app.use(cors());
 app.use(json());
 const root: string = path.join(process.cwd(), 'dist');
 
+// Middleware to log the requested URL and send a server error if database is not connected
+app.use("*", (req, res, next) => {
+  // console.log(`${req.method}: ${req.baseUrl}`);
+  next();
+});
+
 app.use(express.static(root));
+// app.use(express.static(path.join(root,)));
+
+// app.use(express.static(path.join(root, '/client')));
+
+
+
+
+
 
 app.get('/api/records', async (req, res) => {
+  console.log("request for records");
   const allRecords = await db.getAllRecords();
+  // console.log(allRecords)
   res.send(allRecords)
 });
 
+// endpoint to get list of all services
 app.get('/api/services', async (req, res) => {
   const allServices = await db.getAllServices();
   res.send(allServices)
 });
 
+// endpoint to get list of all branches
 app.get('/api/branches', async (req, res) => {
   const branchesList = await db.getAllBranches();
   res.send(branchesList)
 });
 
+// endpoint to get all status options
+app.get('/api/status-options', async (req, res) => {
+  const list = await db.getStatusOptions();
+  // console.log(list.rows[0].enum_range);
+  let obj = list.rows[0].enum_range;
+  // console.log(typeof obj)
+  // console.log(obj)
+  obj = obj.replace('{', '').replace('}', '').replace('"', '').replace('"', '')
+  // console.log(obj.split(','))
+  obj = obj.split(',');
+  res.json(obj);
+})
+
+// endpoint to update record status
+app.put('/api/update-record-status/:recordNumber/:newstatus', async (req, res) => {
+  const recordNumber = Number(req.params.recordNumber)
+  const newStatus = req.params.newstatus
+  console.log(recordNumber, newStatus);
+  const result = await db.updateRecordStatus(newStatus, recordNumber);
+  console.log(result);
+
+})
+
+// endpoint to insert new record
 app.post('/api/insertNewRecord', async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   // let service, branch, client_id, client_nmae, phone_number;
   const { service, branch, client_id, client_name, phone_number } = req.body
-  console.log(req.body)
+  // console.log(req.body)
   try {
     // check if client exist in the system
     const client = await db.getClientById(client_id);
@@ -59,14 +101,10 @@ app.post('/api/insertNewRecord', async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-
-
-
-
-
 })
 
 app.get('*', (_req, res) => {
+  // console.log("root = ", root);
   res.sendFile(path.join(root, 'index.html'));
 });
 
